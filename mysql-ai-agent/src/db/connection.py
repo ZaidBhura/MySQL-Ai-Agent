@@ -13,4 +13,6 @@ def get_db_connection():
         database=os.getenv("DB_NAME"),
         port=int(os.getenv("DB_PORT", 3306)),
         autocommit=True,
+        connect_timeout=5,
+        read_timeout=30,
     )

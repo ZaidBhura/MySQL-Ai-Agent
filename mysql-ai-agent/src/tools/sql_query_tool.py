@@ -25,12 +25,16 @@ def validate_read_only_sql(sql_query: str) -> None:
         raise ValueError("Potentially unsafe SQL keyword detected.")
 
 
-def execute_query(sql_query: str) -> pd.DataFrame:
+def execute_query(sql_query: str, max_rows: int = 10000) -> pd.DataFrame:
     """Execute a SQL query and return the results as a pandas DataFrame."""
     validate_read_only_sql(sql_query)
     connection = get_db_connection()
     try:
-        df = pd.read_sql(sql_query, connection)
+        # Add LIMIT to prevent massive result sets
+        limited_query = sql_query.strip().rstrip(';')
+        if 'LIMIT' not in limited_query.upper():
+            limited_query += f' LIMIT {max_rows}'
+        df = pd.read_sql(limited_query, connection)
         return df
     finally:
         connection.close()

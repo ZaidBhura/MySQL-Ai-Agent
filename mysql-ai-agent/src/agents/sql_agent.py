@@ -144,6 +144,9 @@ Foreign keys:
                         print(row)
                 else:
                     print("No rows matched your filters.")
+            except ValueError as exc:
+                print(f"Query validation failed: {exc}")
             except Exception as exc:
-                print(f"Error: {exc}")
-                print("Please try again with clearer columns, tables, or filters.")
+                print("Query execution failed. Please try again.")
+                # In production, log this securely instead of printing
+                # logging.error(f"Query error: {exc}")
